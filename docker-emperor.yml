@@ -1,0 +1,10 @@
+name: docker-emperor
+version: '3.6'
+
+environment:
+
+aliases:
+    test: echo 'test'
+
+services:
+            

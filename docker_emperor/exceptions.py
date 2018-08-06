@@ -1,0 +1,3 @@
+
+class DockerEmperorException(Exception):
+    pass

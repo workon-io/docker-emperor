@@ -1,0 +1,30 @@
+services:
+
+    webapp:
+        # [...]
+        networks:
+            - docker_emperor_traefik_proxy
+            - default
+        labels:
+            - "traefik.enable=true"
+            - "traefik.backend=my-emperor-app"
+            - "traefik.frontend.rule=Host:www.my-emperor-app.com"  
+            # - "traefik.frontend.rule=Host:${DOMAINNAME}; PathPrefixStrip: /portainer"
+            - "traefik.port=80"
+            - "traefik.docker.network=docker_emperor_traefik_proxy"
+
+    webapp2:
+        # [...]
+        networks:
+            - docker_emperor_traefik_proxy
+            - default
+        labels:
+            - "traefik.enable=true"
+            - "traefik.backend=my-second-emperor-app"
+            - "traefik.frontend.rule=Host:www.my-second-emperor-app.com"  
+            # - "traefik.frontend.rule=Host:${DOMAINNAME}; PathPrefixStrip: /portainer"
+            - "traefik.port=80"
+            - "traefik.docker.network=docker_emperor_traefik_proxy"
+# networks:
+#     default:
+#         driver: bridge

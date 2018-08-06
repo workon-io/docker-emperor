@@ -1,0 +1,9 @@
+global-exclude *.py[cod] __pycache__ *.so .project .pydevproject
+include README.md
+include AUTHORS
+include LICENSE
+include Makefile
+recursive-include docker_emperor *
+recursive-include docker_emperor/bin *
+recursive-include docker_emperor/nodes *
+recursive-include docker_emperor/commands *
