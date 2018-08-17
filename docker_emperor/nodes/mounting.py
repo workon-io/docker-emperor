@@ -75,6 +75,13 @@ class Mounting(dict):
             self['files'] = []
         if not isinstance(self['workdir'], six.string_types): 
             self['workdir'] = '/home/docker/'
+
+        self['environment']['DOCKER_EMPEROR_HOSTS'] = " ".join([
+            host.strip() for host in self['hosts']    
+        ])
+
+        self['environment']['DOCKER_EMPEROR_ENVIRONMENT']  = " ".join(self['environment'].list)
+        
             
     def __repr__(self):
         return '<{}: {}>'.format(self.__class__.__name__, self.name)
@@ -93,14 +100,13 @@ class Mounting(dict):
             hosts.append(self.apply_env(host))    
         return hosts
 
-    def get_machine_driver(self):    
-        print(self.apply_env(self['driver']))    
+    def get_machine_driver(self):      
         return self.apply_env(self['driver'])
 
-    def apply_env(self, string):
-        for name, value in self['environment']:
-            string = string.replace('${%s}' % (name, ), value)
-        return string
+    def apply_env(self, s):
+        for k, v in self['environment']:
+            s = s.replace('${%s}' % (k, ), v)
+        return s
 
     @property
     def is_localhost(self):

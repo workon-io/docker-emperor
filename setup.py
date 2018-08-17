@@ -53,8 +53,8 @@ setuptools.setup(
     ],
     entry_points = {
         'console_scripts': [
-            'docker-emperor = docker_emperor.main:entrypoint',    
-            'de = docker_emperor.main:entrypoint',                
+            'docker-emperor = docker_emperor.root:entrypoint',    
+            'de = docker_emperor.root:entrypoint',                
         ],              
     },
 )

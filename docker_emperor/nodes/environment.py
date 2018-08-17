@@ -44,6 +44,17 @@ class Environment(list):
     def items(self):
         return self.dict.items()
 
+    @property
+    def list(self):
+        e = []
+        for k, v in self:
+            s = v.strip('"').replace('"', '\\"')
+            if ' ' in s:
+                s = '"%s"' % s
+            s = '%s=%s' % (k, s)
+            e.append(s)
+        return e
+
     def __dict__(self, key):
         return self.dict
 
@@ -52,6 +63,10 @@ class Environment(list):
 
     def __getitem__(self, key):
         return self.dict.get(key)
+
+    def __setitem__(self, key, value):
+        self.dict[key] = value
+        self.__init__(self.dict)
 
     def __iter__(self):
         for key, val in self.items():

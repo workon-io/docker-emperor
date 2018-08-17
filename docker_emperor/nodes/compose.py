@@ -58,6 +58,7 @@ class Compose(dict):
         self['volumes'] < self.mounting['volumes'] 
         self.environment < self.mounting['environment'] 
 
+
         self.bin = "%s -f %s" % (docker_compose_bin, self.filename)
         #self.bin = "%s -f %s --project-directory=%s" % (path, self.filename, self.mounting['workdir'])
         # '--project-directory=.',

@@ -16,7 +16,7 @@ from docker_emperor.utils import setdefaultdict, combine, yamp_load
 import docker_emperor.logger as logger
 
 
-class DockerEmperor():
+class Root():
 
     version = __import__('docker_emperor').__version__
 
@@ -67,7 +67,7 @@ class DockerEmperor():
                 self.run_command(cmd, *args)
                 self.save_config()
             else:
-                logger.info('docker-workon version {}'.format(self.version))
+                logger.info('docker-emperor version {}'.format(self.version))
 
         except DockerEmperorException as e:
             logger.error(e)
@@ -126,7 +126,7 @@ def entrypoint():
     try:
         argsparser = argparse.ArgumentParser(description='Docker emperor orchestrator') 
         argsparser.add_argument('args', nargs=argparse.REMAINDER, action="store") 
-        DockerEmperor().entrypoint(*argsparser.parse_args().args)
+        Root().entrypoint(*argsparser.parse_args().args)
     except KeyboardInterrupt:
         logger.warning('Keyboard interrupt, exiting.')
         exit(0)

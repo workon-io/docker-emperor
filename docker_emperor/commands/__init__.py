@@ -75,6 +75,7 @@ class Command():
         self.is_system = kwargs.pop('is_system', False)
         self.mounting = kwargs.pop('mounting', None)
         self.silently_fail = kwargs.pop('silently_fail', False)
+        self.flat_args = kwargs.pop('flat_args', False)
         self.error = None
 
 
@@ -88,7 +89,6 @@ class Command():
         if os.name=="nt":
             fpath = fpath.replace("/","\\") # forwin
         ftmp.close()
-        print(cmd + " > " + fpath)
         os.system(cmd + " > " + fpath)
         data = ""
         with open(fpath, 'r') as file:
@@ -102,9 +102,18 @@ class Command():
 
         for i, arg in enumerate(self.args):
             if isinstance(arg, six.integer_types):
-                self.args[i] = str(arg)
-            elif not isinstance(arg, six.string_types):
+                arg = str(arg)
+            if not isinstance(arg, six.string_types):
                 raise Exception("Argument {} is invalid: {} is not string types".format(i, arg))
+              
+            key_val = arg.split('=')
+            if len(key_val) == 2:
+                key, val = key_val
+                val = val.strip('"').replace('"', '\\"')
+                if ' ' in val:
+                    val = '"%s"' % val.replace(' ', '\\ ')
+                arg = '%s=%s' % (key, val)
+            self.args[i] = arg
 
         # if kwargs.get('log', True):
         #     logger.info(" ".join(self.cmd))
@@ -124,6 +133,11 @@ class Command():
 
         # if kwargs.get('log', True):
         #     logger.comment("Env.\n" + "\n".join(self.env))
+
+
+        if isinstance(self.mounting, Command.Mounting):
+            for name, value in self.mounting['environment']:
+                self.cmd_line = self.cmd_line.replace('${%s}' % (name), value)
 
         if self.is_system:
             self.out = os.system(self.cmd_line)
