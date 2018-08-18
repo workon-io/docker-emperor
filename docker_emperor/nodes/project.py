@@ -81,12 +81,15 @@ class Project(dict):
                     else:
                         local_args = tuple(args)
 
+                    for name, value in self.compose.environment:
+                        line = line.replace('${%s}' % (name), value)
+
                     logger.cmd('Run %s %s' % (line, " ".join(local_args)))
+                    cmd_args = tuple(line.split()) + local_args
                     cmd = self.root.bash(
                         'docker-emperor',
-                        line,
-                        *local_args,
-                        mounting=self.mounting,
+                        *cmd_args,
+                        compose=self.compose,
                         is_system=True
                     )
                     if not cmd.is_success:

@@ -46,14 +46,18 @@ class Environment(list):
 
     @property
     def list(self):
-        e = []
-        for k, v in self:
-            s = v.strip('"').replace('"', '\\"')
-            if ' ' in s:
-                s = '"%s"' % s
-            s = '%s=%s' % (k, s)
-            e.append(s)
-        return e
+        # e = []
+        return [
+            '%s=%s' % (k, v.strip().replace('\\ ', '').replace(' ', '\\ ')) 
+            for k, v in self
+        ]
+        #     v = 
+        #     # if ' ' in v:
+        #     #     s = v.strip('"').replace('"', '\\"')
+        #     #     s = '"%s"' % s
+        #     # s = 
+        #     e.append)
+        # return e#[escape_arg('%s=%s' % (k, v)) for k, v in self]
 
     def __dict__(self, key):
         return self.dict

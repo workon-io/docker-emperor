@@ -9,6 +9,6 @@ def run(root, *args, **kwargs):
         root.project.compose.bin,
         'logs',
         *args,
-        mounting=root.mounting,
+        compose=root.compose,
         is_system=True
     )

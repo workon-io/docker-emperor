@@ -76,11 +76,6 @@ class Mounting(dict):
         if not isinstance(self['workdir'], six.string_types): 
             self['workdir'] = '/home/docker/'
 
-        self['environment']['DOCKER_EMPEROR_HOSTS'] = " ".join([
-            host.strip() for host in self['hosts']    
-        ])
-
-        self['environment']['DOCKER_EMPEROR_ENVIRONMENT']  = " ".join(self['environment'].list)
         
             
     def __repr__(self):

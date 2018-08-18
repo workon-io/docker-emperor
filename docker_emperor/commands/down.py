@@ -9,7 +9,7 @@ def run(root, *args, **kwargs):
         root.compose.bin,
         'down',
         '--remove-orphans',
-        mounting=root.mounting,
+        compose=root.compose,
         is_system=True
     )
     if cmd.is_success:

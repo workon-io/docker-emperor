@@ -10,7 +10,7 @@ def run(root, *args, **kwargs):
         root.compose.bin,
         'run',
         *args,
-        mounting=root.mounting,
+        compose=root.compose,
         is_system=True
     )
     if cmd.is_success:

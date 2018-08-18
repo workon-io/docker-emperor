@@ -9,6 +9,6 @@ def run(root, *args, **kwargs):
         root.compose.bin,
         'exec', 
         *args,
-        mounting=root.mounting,
+        compose=root.compose,
         is_system=True
     )

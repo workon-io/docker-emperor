@@ -58,6 +58,10 @@ class Compose(dict):
         self['volumes'] < self.mounting['volumes'] 
         self.environment < self.mounting['environment'] 
 
+        self.environment['DOCKER_EMPEROR_HOSTS'] = " ".join([
+            host.strip() for host in self.mounting['hosts']    
+        ])
+        self.environment['DOCKER_EMPEROR_ENVIRONMENT']  = " ".join(self.environment.list)
 
         self.bin = "%s -f %s" % (docker_compose_bin, self.filename)
         #self.bin = "%s -f %s --project-directory=%s" % (path, self.filename, self.mounting['workdir'])
@@ -108,3 +112,6 @@ class Compose(dict):
         return self.__class__(dict(self))
  
 yaml.add_representer(Compose, lambda dumper, data: dumper.represent_dict(data))
+
+
+Command.Compose = Compose

@@ -10,7 +10,7 @@ def run(root, *args, **kwargs):
         '--no-cache',
         'build',
         *args, 
-        mounting=root.mounting,
+        compose=root.compose,
         is_system=True
     )
     if cmd.is_success:

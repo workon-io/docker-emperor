@@ -73,11 +73,26 @@ class Command():
         self.args = list(args)
         self.env = kwargs.pop('env', [])
         self.is_system = kwargs.pop('is_system', False)
-        self.mounting = kwargs.pop('mounting', None)
+        self.compose = kwargs.pop('compose', None)
         self.silently_fail = kwargs.pop('silently_fail', False)
         self.flat_args = kwargs.pop('flat_args', False)
+        self.escape = kwargs.pop('escape', True)
         self.error = None
 
+        for i, arg in enumerate(self.args):
+            if isinstance(arg, six.integer_types):
+                arg = str(arg)
+            if not isinstance(arg, six.string_types):
+                raise Exception("Argument {} is invalid: {} is not string types".format(i, arg))
+
+            key_val = arg.split('=')
+            if len(key_val) == 2:
+                key, val = key_val
+                val = val.strip('"').replace('\\"', '"').replace('"', '\\"')
+                if ' ' in val:
+                    val = '"%s"' % val.replace('\\ ', ' ').replace(' ', '\\ ')
+                arg = '%s=%s' % (key, val)
+            self.args[i] = arg
 
     @property
     def is_success(self):
@@ -100,30 +115,12 @@ class Command():
 
     def run(self, log=False):
 
-        for i, arg in enumerate(self.args):
-            if isinstance(arg, six.integer_types):
-                arg = str(arg)
-            if not isinstance(arg, six.string_types):
-                raise Exception("Argument {} is invalid: {} is not string types".format(i, arg))
-              
-            key_val = arg.split('=')
-            if len(key_val) == 2:
-                key, val = key_val
-                val = val.strip('"').replace('"', '\\"')
-                if ' ' in val:
-                    val = '"%s"' % val.replace(' ', '\\ ')
-                arg = '%s=%s' % (key, val)
-            self.args[i] = arg
-
-        # if kwargs.get('log', True):
-        #     logger.info(" ".join(self.cmd))
-
         if not self.env: self.env = []
         if not isinstance(self.env, list):
             raise Exception("Env arguments are invalid: {} is not list types".format(self.env))
 
-        if isinstance(self.mounting, Command.Mounting):
-            self.env += self.mounting.docker_env       
+        if isinstance(self.compose, Command.Compose):
+            self.env += self.compose.mounting.docker_env       
 
         self.cmd_line = " ".join(self.env + self.args)
 
@@ -134,9 +131,8 @@ class Command():
         # if kwargs.get('log', True):
         #     logger.comment("Env.\n" + "\n".join(self.env))
 
-
-        if isinstance(self.mounting, Command.Mounting):
-            for name, value in self.mounting['environment']:
+        if isinstance(self.compose, Command.Compose):
+            for name, value in self.compose.environment:
                 self.cmd_line = self.cmd_line.replace('${%s}' % (name), value)
 
         if self.is_system:
@@ -176,55 +172,3 @@ class Command():
     def log(self):
         logger.success(self.out)
 
-
-    # def _run(self, cmd, raise_error=True):
-    #     """
-    #     Run a docker-machine command, optionally raise error if error code != 0
-    #     Args:
-    #         cmd (List[str]): a list of the docker-machine command with the arguments to run
-    #         raise_error (bool): raise an exception on non 0 return code
-    #     Returns:
-    #         tuple: stdout, stderr, error_code
-    #     """
-    #     cmd = [self.machine.bin] + cmd
-    #     print(" ".join(cmd))
-
-    #     # output = subprocess.check_output(cmd)
-    #     # print(output.strip())
-    #     # return output
-
-    #     process = subprocess.Popen(cmd, stdin=subprocess.PIPE, stdout=subprocess.PIPE, stderr=subprocess.PIPE)
-    #     for line in iter(process.stdout.readline, ''):  # replace '' with b'' for Python 3
-    #         print(line.strip())
-
-    #     stdout, stderr = process.communicate()
-    #     # print(stdout, stderr)
-    #     error_code = process.returncode
-    #     # if raise_error and error_code:
-    #     #     raise RuntimeError("cmd returned error %s: %s" % (error_code, stderr.decode('utf-8').strip()))
-    #     return stdout.decode('utf-8'), stderr.decode('utf-8'), error_code
-
-
-    # def _run_blocking(self, cmd, raise_error=True):
-    #     """
-    #     Run a docker-machine command, optionally raise error if error code != 0
-    #     Args:
-    #         cmd (List[str]): a list of the docker-machine command with the arguments to run
-    #         raise_error (bool): raise an exception on non 0 return code
-    #     Returns:
-    #         tuple: stdout, stderr, error_code
-    #     """
-    #     cmd = [self.machine.bin] + cmd
-
-    #     # output = subprocess.check_output(cmd)
-    #     # print(output.strip())
-    #     # return output
-
-
-    #     p = subprocess.open(cmd, stdin=subprocess.PIPE, stdout=subprocess.PIPE, stderr=subprocess.PIPE)
-    #     stdout, stderr = p.communicate()
-    #     error_code = p.wait()
-
-    #     # if raise_error and error_code:
-    #     #     raise RuntimeError("cmd returned error %s: %s" % (error_code, stderr.decode('utf-8').strip()))
-    #     return stdout.decode('utf-8'), stderr.decode('utf-8'), error_code

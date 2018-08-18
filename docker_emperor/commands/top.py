@@ -7,6 +7,6 @@ def run(root, *args, **kwargs):
         root.project.compose.bin,
         'top',
         *args,
-        mounting=root.mounting,
+        compose=root.compose,
         is_system=True
     )

@@ -7,7 +7,7 @@ def run(root, *args, **kwargs):
         root.compose.bin,
         'restart',
         *args,
-        mounting=root.mounting,
+        compose=root.compose,
         is_system=True
     )
     if cmd.is_success:

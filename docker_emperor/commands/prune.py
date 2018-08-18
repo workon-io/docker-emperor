@@ -12,6 +12,6 @@ def run(root, *args, **kwargs):
             root.docker_path,
             sys,
             'prune',
-            mounting=root.mounting,
+            compose=root.compose,
             is_system=True
         )

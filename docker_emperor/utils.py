@@ -1,6 +1,7 @@
 import six
 import yaml
 import uuid
+import re
 try:
         # for python newer than 2.7
     from collections import OrderedDict
@@ -19,7 +20,15 @@ YamlDumper.add_representer(OrderedDict, dict_representer)
 YamlLoader.add_constructor(_mapping_tag, dict_constructor)
 
 
-__all__ = ['setdefaultdict', 'memoized_property', 'memoized', 'yamp_load', 'yamp_dump', 'yaml', 'OrderedDict' ]
+__all__ = [
+    'setdefaultdict', 
+    'memoized_property', 
+    'memoized', 
+    'yamp_load', 
+    'yamp_dump', 
+    'yaml', 
+    'OrderedDict'
+]
 
 
 def yamp_dump(data):
@@ -125,3 +134,4 @@ def combine(elm1, elm2, *args):
         return combine(elm1, **args)
     else:
         return elm1
+
