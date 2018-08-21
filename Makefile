@@ -1,5 +1,6 @@
 deploy:
 	make pypi_upload
+	git push
 
 pypi_upload:
 	python setup.py sdist upload -r pypi || echo 'docker-emperor is up-to-date'

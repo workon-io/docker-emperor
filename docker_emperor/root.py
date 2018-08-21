@@ -52,11 +52,11 @@ class Root():
             setattr(self, n, Project(self))
         return getattr(self, n)
 
-    @property 
+    @property
     def mounting(self):
         return self.project.mounting
 
-    @property 
+    @property
     def compose(self):
         return self.project.compose
 
