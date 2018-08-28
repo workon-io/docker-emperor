@@ -34,7 +34,8 @@ class Project(dict):
             ('mounting', Mountings),
             ('commands', Commands),
         ]:
-            self[default_name] = default_class(self[default_name])        
+            self[default_name] = default_class(self[default_name])  
+
         self.config = setdefaultdict(root.projects, self.name, {})
         self.config['workdir'] = os.path.abspath(self.root.root_path)
 

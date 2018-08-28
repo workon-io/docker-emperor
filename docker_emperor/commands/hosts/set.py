@@ -32,4 +32,4 @@ def run(root, *args, **kwargs):
             )
 
             if cmd.is_success:
-                logger.success('Host <b>%s</b> has been set.' % (host, ))
+                logger.success('Host <b>%s</b> has been set on %s.' % (host, mounting, ))

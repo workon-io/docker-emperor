@@ -76,11 +76,13 @@ class Compose(dict):
                     service['image'] =  '%s.%s' % (self.project.name, service.name)
                     service['build'] = service.name
                 else:
-                    service['image'] =  service.name
+                    service['image'] = service.name
             else:
                 if 'image' in service:
                     if os.path.isfile(os.path.join(self.root.root_path, service['image'], 'Dockerfile')):
-                        service['build'] = service['image']
+                        service_name = service['image']
+                        service['image'] = '%s.%s' % (self.project.name, service_name)
+                        service['build'] = service_name
 
             if not self.mounting.is_localhost:
                 if 'volumes' in service:
