@@ -17,12 +17,15 @@ def run(root, *args, **kwargs):
         mounting = root.mounting
         
     if not mounting.is_localhost:
+
+        logger.cmd('Create machine <b>%s</b>' % (mounting.docker_machine_name, ))
+        logger.cmd('With driver <b>%s</b>' % (mounting.get_machine_driver(), ))
         cmd = root.bash(
             mounting.docker_machine_bin, 
             'create', 
             '--driver',
             mounting.get_machine_driver(),        
-            mounting.name,
+            mounting.docker_machine_name,#root.compose.name,
             *args,
             is_system=True
         )

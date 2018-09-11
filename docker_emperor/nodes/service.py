@@ -1,5 +1,6 @@
 import os
 import copy
+import six
 from docker_emperor.nodes.environment import Environment
 from docker_emperor.utils import setdefaultdict, yaml
 
@@ -84,6 +85,8 @@ class Service(dict):
                         self[key].update(val)
                     elif isinstance(self[key], list) and isinstance(val, list):
                         self[key] = list(set(self[key] + copy.deepcopy(val)))
+                    elif isinstance(val, six.string_types):
+                        self[key] = val
 
         return self
 

@@ -22,7 +22,10 @@ class Compose(dict):
         'services', 
         'volumes', 
         'networks', 
-        'version'
+        'version', 
+        'configs', 
+        'secrets', 
+        'deploy'
     ]
 
     def __new__(cls, *args, **kwargs):
@@ -39,7 +42,7 @@ class Compose(dict):
         self.root = root
         self.project = self.root.project  
         self.mounting = self.project.mounting
-        self.name = '%s.%s' % (self.project.name, self.mounting.name)
+        self.name = self.mounting.docker_machine_name
         self.filename = os.path.join(self.root.root_path, 'docker-compose.%s.yml' % self.name)
         data = dict(self.project)
         for node_name, node in data.items():

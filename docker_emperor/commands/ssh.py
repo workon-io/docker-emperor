@@ -11,7 +11,7 @@ def run(root, *args, **kwargs):
         cmd = root.bash(
             mounting.docker_machine_bin, 
             'ssh', 
-            mounting.name,
+            mounting.docker_machine_name,
             *args,
             is_system=True
         )

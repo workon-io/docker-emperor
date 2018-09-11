@@ -31,10 +31,11 @@ class Project(dict):
         super(Project, self).__init__(self.get_yml_data())
         for default_name, default_class in [
             ('environment', Environment),
-            ('mounting', Mountings),
             ('commands', Commands),
         ]:
             self[default_name] = default_class(self[default_name])  
+
+        self['mounting'] = Mountings(self, self['mounting'])
 
         self.config = setdefaultdict(root.projects, self.name, {})
         self.config['workdir'] = os.path.abspath(self.root.root_path)
@@ -77,6 +78,7 @@ class Project(dict):
                 if line == name:
                     logger.error('Comand loop error: <b>%s</b>' % (line, ))
                 else:
+                    # TODO: Improve with @mounting detection and Split by | and < or >
                     if self.root.current_mounting and line.split()[-1][0] != '@':
                         local_args = tuple(args) + ('@%s' % self.root.current_mounting,)
                     else:

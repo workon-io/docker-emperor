@@ -20,13 +20,14 @@ class Mountings(dict):
     def __new__(cls, *args, **kwargs):
         return dict.__new__(cls, *args, **kwargs)
 
-    def __init__(self, data):
+    def __init__(self, project, data):
+        self.project = project
         super(Mountings, self).__init__(OrderedDict(setdefaultdict(data)))
         if self:
             for key, val in self.items():
-                self[key] = Mounting(key, val)
+                self[key] = Mounting(self.project, key, val)
         else:
-            self['localhost'] = Mounting('localhost')
+            self['localhost'] = Mounting(self.project, 'localhost')
 
     def __iter__(self):
         for key, val in self.items():
@@ -55,8 +56,10 @@ class Mounting(dict):
     def __new__(cls, *args, **kwargs):
         return dict.__new__(cls, *args, **kwargs)
 
-    def __init__(self, name, data=dict(), docker_machine_bin="docker-machine"):
+    def __init__(self, project, name, data=dict(), docker_machine_bin="docker-machine"):
+        self.project = project
         self.name = name
+        self.docker_machine_name = '%s.%s' % (self.project.name, self.name)
         self.docker_machine_bin = docker_machine_bin
         super(Mounting, self).__init__(setdefaultdict(data))
         for default_name, default_class in [
@@ -113,9 +116,9 @@ class Mounting(dict):
 
     @property
     def exists(self):
-        cmd = self._run("ls", "--filter", "NAME=" + self.name, "--format", "{{.Name}}", machine=self, tty=False)
+        cmd = self._run("ls", "--filter", "NAME=" + self.docker_machine_name, "--format", "{{.Name}}", machine=self, tty=False)
         for line in cmd.lines:
-            if line == self.name:return True
+            if line == self.docker_machine_name:return True
         return False
 
     @property
@@ -125,7 +128,7 @@ class Mounting(dict):
             if self.is_localhost:
                 env = []
             else:
-                cmd = self.bash('env', self.name)
+                cmd = self.bash('env', self.docker_machine_name)
                 starts = 'export '
                 env = [line.lstrip(starts) for line in cmd.lines if line.startswith(starts)]
             setattr(self, n, env)
@@ -134,7 +137,7 @@ class Mounting(dict):
     def start(self):
         if self.is_localhost:
             if not self.is_running:
-                self.bash('start', self.name, sys=True).run().log()  
+                self.bash('start', self.docker_machine_name, sys=True).run().log()  
         return self.is_running
 
     @property
@@ -151,29 +154,29 @@ class Mounting(dict):
         if self.is_localhost:
             return 'Running'
         else:
-            return self.bash('status', self.name).out
+            return self.bash('status', self.docker_machine_name).out
     
     @property
     def ip(self):
         if self.is_localhost:
             return '0.0.0.0'
         else:
-            return self.bash('ip', self.name, log=False, machine=self).out.strip()
+            return self.bash('ip', self.docker_machine_name, log=False, machine=self).out.strip()
 
     @property
     def pwd(self):
-        return self.bash('ssh', self.name, 'pwd', log=False, machine=self).out.strip()
+        return self.bash('ssh', self.docker_machine_name, 'pwd', log=False, machine=self).out.strip()
 
     @property
     def inspect(self):
-        return self.bash('inspect', self.name, machine=self, tty=False).out
+        return self.bash('inspect', self.docker_machine_name, machine=self, tty=False).out
 
     @property
     def active(self):
         return self.bash('active', machine=self, tty=False).out
 
     def remove(self):
-        return self.bash('rm', self.name, machine=self)
+        return self.bash('rm', self.docker_machine_name, machine=self)
 
 # active
 # config
