@@ -18,14 +18,11 @@ def run(root, *args, **kwargs):
         
     if not mounting.is_localhost:
 
-        root.run_command('remove', *args, internal=True)
         logger.cmd('Create machine <b>%s</b>' % (mounting.docker_machine_name, ))
         logger.cmd('With driver <b>%s</b>' % (mounting.get_machine_driver(), ))
         cmd = root.bash(
             mounting.docker_machine_bin, 
-            'create', 
-            '--driver',
-            mounting.get_machine_driver(),        
+            'rm',       
             mounting.docker_machine_name,#root.compose.name,
             *args,
             is_system=True

@@ -28,6 +28,13 @@ class Compose(dict):
         'deploy'
     ]
 
+    NOT_NODES = [
+        'name', 
+        'environment', 
+        'commands', 
+        'mounting'
+    ]
+
     def __new__(cls, *args, **kwargs):
         return dict.__new__(cls, *args, **kwargs)
 
@@ -46,7 +53,7 @@ class Compose(dict):
         self.filename = os.path.join(self.root.root_path, 'docker-compose.%s.yml' % self.name)
         data = dict(self.project)
         for node_name, node in data.items():
-            if node_name not in Compose.NODES:
+            if node_name in Compose.NOT_NODES:
                 data.pop(node_name)
         super(Compose, self).__init__(data)
         for default_name, default_class in [

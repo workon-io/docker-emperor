@@ -126,7 +126,7 @@ class Command():
 
         if '--verbose' in self.args:
             self.cmd_line = self.cmd_line.replace('--verbose', '')
-        # logger.comment(self.cmd_line)
+        #  logger.comment(self.cmd_line)
 
         # if kwargs.get('log', True):
         #     logger.comment("Env.\n" + "\n".join(self.env))
