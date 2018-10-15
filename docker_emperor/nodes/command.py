@@ -24,11 +24,12 @@ class Commands(dict):
 
     def __lt__(self, inst):
         if not isinstance(inst, self.__class__): return self
-        for name, inst in inst.items(): 
-            if not name in self:
-                self[name] = inst.copy()
-            else:
-                self[name] < inst
+        self.update(inst)
+        # for name, inst in inst.items(): 
+        #     if not name in self:
+        #         self[name] = inst.copy()
+        #     else:
+        #         self[name] < inst
         return self
 
     def __iter__(self):
@@ -50,6 +51,7 @@ class CustomCommand():
 
     def __lt__(self, inst):
         if not isinstance(inst, self.__class__): return self
+        # self.update(inst) 
         # self.__init__(self.name, combine(inst, self))
         return self
 

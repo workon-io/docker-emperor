@@ -36,7 +36,7 @@ class Environment(list):
 
     def __lt__(self, inst):
         if not isinstance(inst, self.__class__): return self
-        del self[:]     
+        del self[:]
         self.dict.update(inst.dict) 
         self.__init__(self.dict)
         return self

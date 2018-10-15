@@ -71,6 +71,8 @@ class Project(dict):
     def run_command(self, name, *args):
         commands = self['commands']
         commands < self.mounting['commands'] 
+
+        print(commands)
         if name in commands:                    
             command = commands[name]
             logger.cmd('Run custom command <b>%s</b>' % (command.name, ))
