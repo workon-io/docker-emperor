@@ -1,4 +1,15 @@
 deploy:
+	python autotag.py minor
+	make pypi_upload
+	git push
+
+deploy_medium:
+	python autotag.py medium
+	make pypi_upload
+	git push
+
+deploy_major:
+	python autotag.py major
 	make pypi_upload
 	git push
 
@@ -10,7 +21,6 @@ develop:
 	python setup.py develop --user
 	which de
 	which docker-emperor
-
 
 undevelop:
 	sudo pip uninstall docker-emperor

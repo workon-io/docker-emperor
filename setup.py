@@ -41,8 +41,8 @@ setuptools.setup(
     packages=setuptools.find_packages(exclude=EXCLUDE_FROM_PACKAGES),
     include_package_data=True,
     install_requires=[
-        'PyYAML==3.12',
-        'six==1.11.0',
+        'PyYAML==4.2b4',
+        'six==1.12.0',
     ],
     classifiers=[
         "Development Status :: 3 - Alpha",

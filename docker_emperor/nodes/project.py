@@ -35,6 +35,8 @@ class Project(dict):
         ]:
             self[default_name] = default_class(self[default_name])  
 
+        if not self['mounting']:
+            self['mounting'] = self['targets']
         self['mounting'] = Mountings(self, self['mounting'])
 
         self.config = setdefaultdict(root.projects, self.name, {})
@@ -72,7 +74,6 @@ class Project(dict):
         commands = self['commands']
         commands < self.mounting['commands'] 
 
-        print(commands)
         if name in commands:                    
             command = commands[name]
             logger.cmd('Run custom command <b>%s</b>' % (command.name, ))

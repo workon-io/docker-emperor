@@ -16,6 +16,7 @@ def run(root, *args, **kwargs):
             cmd = root.bash(
                 root.mounting.docker_machine_bin,
                 'scp',
+                '--quiet',
                 '-r',
                 '-d',
                 file, 

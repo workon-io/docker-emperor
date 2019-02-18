@@ -32,7 +32,8 @@ class Compose(dict):
         'name', 
         'environment', 
         'commands', 
-        'mounting'
+        'mounting', 
+        'targets'
     ]
 
     def __new__(cls, *args, **kwargs):
@@ -50,6 +51,7 @@ class Compose(dict):
         self.project = self.root.project  
         self.mounting = self.project.mounting
         self.name = self.mounting.docker_machine_name
+        self.native_filename = os.path.join(self.root.root_path, 'docker-compose.yml')
         self.filename = os.path.join(self.root.root_path, 'docker-compose.%s.yml' % self.name)
         data = dict(self.project)
         for node_name, node in data.items():
@@ -109,14 +111,17 @@ class Compose(dict):
                             new_volumes.append(volume)
                     service['volumes'] = new_volumes
 
-
-
-
-
-        file = open(self.filename, 'wb')# = tempfile.NamedTemporaryFile(mode='w+b', bufsize=-1, suffix='.yml', prefix='docker-compose-', dir=None, delete=False)
+        
         yml = yamp_dump(self)
         for name, value in self.environment:
             yml = yml.replace('${%s}' % (name), value)
+            
+        if self.mounting.is_localhost:
+            native_file = open(self.native_filename, 'wb')
+            native_file.write(yml)
+            native_file.close()
+        
+        file = open(self.filename, 'wb')# = tempfile.NamedTemporaryFile(mode='w+b', bufsize=-1, suffix='.yml', prefix='docker-compose-', dir=None, delete=False)
         file.write(yml)
         file.close()
 
