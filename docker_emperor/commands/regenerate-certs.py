@@ -5,8 +5,8 @@ import docker_emperor.logger as logger
 def run(root, *args, **kwargs):
     
     Command(
-        root.machine.bin, 
+        root.mounting.docker_machine_bin, 
         'regenerate-certs', 
-        root.machine.name,
+        root.mounting.docker_machine_name,
         is_system=True
     )

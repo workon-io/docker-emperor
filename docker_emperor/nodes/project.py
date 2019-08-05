@@ -92,6 +92,7 @@ class Project(dict):
 
                     logger.cmd('Run %s %s' % (line, " ".join(local_args)))
                     cmd_args = tuple(line.split()) + local_args
+
                     cmd = self.root.bash(
                         'docker-emperor',
                         *cmd_args,
