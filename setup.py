@@ -41,7 +41,7 @@ setuptools.setup(
     packages=setuptools.find_packages(exclude=EXCLUDE_FROM_PACKAGES),
     include_package_data=True,
     install_requires=[
-        'PyYAML==4.2b4',
+        'PyYAML==5.4',
         'six==1.12.0',
     ],
     classifiers=[
